@@ -6,8 +6,7 @@ import styled from "styled-components";
 const ExpenseItem = ({ expense }) => {
   // useNavigate
   const navigate = useNavigate();
-  const { id, date, item, description, amount } = expense;
-
+  const { id, date, item, description, amount, createdBy } = expense;
   // expense를 넘기면서 해당 id를 가진 detail 페이지로 이동하는 함수
   const onClickLiHandler = (expense) => {
     navigate(`/detail/${id}`, {
@@ -21,7 +20,7 @@ const ExpenseItem = ({ expense }) => {
       <StItemLeft>
         <p>{date}</p>
         <StDescription>
-          {item} - {description}
+          {item} - {description} (by {createdBy})
         </StDescription>
       </StItemLeft>
       <StItemRight>{amount.toLocaleString()}원</StItemRight>

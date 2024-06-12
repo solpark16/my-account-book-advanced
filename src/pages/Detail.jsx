@@ -3,14 +3,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { setExpenses } from "../redux/slices/expensesSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import jsonApi from "../axios/jsonApi";
 
 // Detail Component
 const Detail = () => {
+  const queryClient = useQueryClient();
+
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { expenses } = useSelector((state) => state.expenses);
-  const { expense } = location.state.expense;
+  // const { expenses } = useSelector((state) => state.expenses);
+  // const { expense } = location.state.expense;
   // save ref
   const saveDateRef = useRef(expense.date);
   const saveItemRef = useRef(expense.item);
@@ -81,16 +85,17 @@ const Detail = () => {
   const handleDelete = () => {
     confirm("정말로 삭제하시겠습니까?");
     const deleteExpenseId = expense.id;
-    // dispatch 사용해 전역관리 state 업데이트
-    dispatch(
-      setExpenses(
-        expenses.filter((expense) => {
-          return deleteExpenseId !== expense.id;
-        })
-      )
-    );
-    navigate(`/`);
+    jsonApi.delete(`/expenses/${deleteExpenseId}`);
   };
+
+  // 삭제 mutation
+  const deleteMutation = useMutation({
+    mutationFn: handleDelete,
+    onSuccess: () => {
+      navigate(`/home`);
+      queryClient.invalidateQueries(["expenses"]);
+    },
+  });
 
   return (
     <StDiv>
@@ -126,7 +131,13 @@ const Detail = () => {
         <StButton $backColor="#1467ff" onClick={handleSubmit}>
           수정
         </StButton>
-        <StButton $backColor="#ff2e2e" onClick={handleDelete}>
+        <StButton
+          $backColor="#ff2e2e"
+          onClick={(e) => {
+            e.preventDefault();
+            deleteMutation.mutate();
+          }}
+        >
           삭제
         </StButton>
         <StButton

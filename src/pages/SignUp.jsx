@@ -43,7 +43,6 @@ const SignUp = () => {
       );
       const data = response.data;
       if (data.success) {
-        console.log("됐슴다");
         navigate("/");
       } else {
         alert("Signup failed");

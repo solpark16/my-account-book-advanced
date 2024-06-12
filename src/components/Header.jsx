@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
+import authApi from "../axios/authApi";
 
 const Header = () => {
   const { isAuthenticated, logout } = useContext(AuthContext);
@@ -17,17 +18,15 @@ const Header = () => {
       const fetchUserInfo = async () => {
         try {
           const token = localStorage.getItem("accessToken");
-          const { data } = await axios.get(
-            "https://moneyfulpublicpolicy.co.kr/user",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const { data } = await authApi.get("/user", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           setUserInfo(data);
         } catch (error) {
           console.error("Failed to fetch user info:", error);
+          logout();
         }
       };
       fetchUserInfo();
