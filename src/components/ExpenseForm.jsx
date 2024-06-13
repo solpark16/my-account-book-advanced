@@ -10,28 +10,9 @@ import { postExpense } from "../lib/api/expense";
 
 // component
 const ExpenseForm = () => {
-  const { isAuthenticated, logout } = useContext(AuthContext);
-  const [userInfo, setUserInfo] = useState(null);
+  const { user } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
-  // 올릴 때 createdBy 작성자 나와야해서 가져온 유저정보. 나중에 전역적으로 리팩토링 할 수 있을지도
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        const { data } = await authApi.get("/user", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserInfo(data);
-      } catch (error) {
-        console.error("Failed to fetch user info:", error);
-        logout();
-      }
-    };
-    fetchUserInfo();
-  }, [isAuthenticated]);
   // useSelector
   const { selectedMonth } = useSelector((state) => state.selectedMonth);
 
@@ -64,15 +45,14 @@ const ExpenseForm = () => {
       alert("항목, 금액, 내용을 모두 입력해주세요.");
       return;
     }
-
     const newExpense = {
       id: uuidv4(),
-      month: +selectedMonth,
+      month: +date.slice(5, 7),
       date,
       item,
       amount: +amount,
       description,
-      createdBy: userInfo.id,
+      createdBy: user.userId,
       userId: "userId 미존재, 리팩토링 필요",
     };
 

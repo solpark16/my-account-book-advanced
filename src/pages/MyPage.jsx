@@ -3,40 +3,21 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
+import authApi from "../axios/authApi";
+import { updateProfile } from "../lib/api/auth";
 
 const MyPage = () => {
-  const [userInfo, setUserInfo] = useState(null);
-  const [newNickname, setNewNickname] = useState("");
-  const [newImage, setNewImage] = useState({});
-  const { isAuthenticated } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
+  const [newNickname, setNewNickname] = useState(user ? user.nickname : "");
+  const [newImage, setNewImage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      alert("로그인이 필요합니다.");
-      navigate("/");
-    } else {
-      const fetchUserInfo = async () => {
-        try {
-          const token = localStorage.getItem("accessToken");
-          const { data } = await axios.get(
-            "https://moneyfulpublicpolicy.co.kr/user",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setUserInfo(data);
-          setNewNickname(data.nickname);
-          setNewImage(data.avatar);
-        } catch (error) {
-          console.error("Failed to fetch user info:", error);
-        }
-      };
-      fetchUserInfo();
+    if (user) {
+      setNewNickname(user.nickname);
+      // setNewImage(user.avatar);
     }
-  }, [isAuthenticated, navigate]);
+  }, [user]);
 
   const handleProfileChange = async (e) => {
     e.preventDefault();
@@ -44,51 +25,33 @@ const MyPage = () => {
       alert("닉네임은 1~10 글자로 입력해주세요.");
       return;
     }
-    if (newImage === userInfo.avatar && newNickname === userInfo.nickname) {
-      alert("변경 사항이 없습니다.");
-      return;
-    }
-    try {
-      const token = localStorage.getItem("accessToken");
-      const formData = new FormData();
+
+    const formData = new FormData();
+    if (newNickname) {
       formData.append("avatar", newImage);
-      formData.append("nickname", newNickname);
-      // 요청 시 Content-Type에 유의
-      const { data } = await axios.patch(
-        `https://moneyfulpublicpolicy.co.kr/profile`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (data.success) {
-        setUserInfo({
-          ...userInfo,
-          nickname: data.nickname,
-          avatar: data.avatar ? data.avatar : userInfo.avatar,
-        });
-        alert("프로필 변경이 완료되었습니다.");
-        navigate("/home");
-      } else {
-        alert("프로필 변경에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("Failed to update nickname:", error);
-      alert("닉네임 변경에 실패했습니다.");
+    }
+    formData.append("nickname", newNickname);
+
+    const response = await updateProfile(formData);
+
+    if (response.success) {
+      setUser({
+        ...user,
+        nickname: response.nickname,
+        avatar: response.avatar,
+      });
+      navigate("/");
     }
   };
 
-  if (!userInfo) {
-    return <div>Loading...</div>;
-  }
+  // if (!userInfo) {
+  //   return <div>Loading...</div>;
+  // }
   return (
     <StDiv>
       <StProfileBox>
         <StProfileTitle>프로필 수정</StProfileTitle>
-        <StProfileImg src={userInfo.avatar} />
+        {/* <StProfileImg src={userInfo.avatar} /> */}
         <StProfileForm onSubmit={handleProfileChange}>
           <label>닉네임</label>
           <StNicknameInput
@@ -102,7 +65,6 @@ const MyPage = () => {
 
           <input
             type="file"
-            name="file"
             onChange={(e) => {
               setNewImage(e.target.files[0]);
             }}

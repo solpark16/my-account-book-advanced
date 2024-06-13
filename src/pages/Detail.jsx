@@ -39,7 +39,7 @@ const Detail = () => {
   const updateMutation = useMutation({
     mutationFn: patchExpense,
     onSuccess: () => {
-      navigate("/home");
+      navigate("/");
     },
   });
 
@@ -79,7 +79,7 @@ const Detail = () => {
   const deleteMutation = useMutation({
     mutationFn: deleteExpense,
     onSuccess: () => {
-      navigate("/home");
+      navigate("/");
     },
   });
 
@@ -99,56 +99,61 @@ const Detail = () => {
   }
   return (
     <StDiv>
-      <StLabel>날짜</StLabel>
-      <StInput
-        placeholder="YYYY-MM-DD"
-        type="text"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-      />
-      <StLabel>항목</StLabel>
-      <StInput
-        placeholder="지출 항목"
-        type="text"
-        value={item}
-        onChange={(e) => setItem(e.target.value)}
-      />
-      <StLabel>금액</StLabel>
-      <StInput
-        placeholder="지출 금액"
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-      <StLabel>내용</StLabel>
-      <StInput
-        placeholder="지출 내용"
-        type="text"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <StBtnBox>
-        <StButton $backColor="#1467ff" onClick={handleSubmit}>
-          수정
-        </StButton>
-        <StButton $backColor="#ff2e2e" onClick={handleDelete}>
-          삭제
-        </StButton>
-        <StButton
-          $backColor="#6e6e6e"
-          onClick={() => {
-            navigate(`/`);
-          }}
-        >
-          뒤로 가기
-        </StButton>
-      </StBtnBox>
+      <StDetailBox>
+        <StLabel>날짜</StLabel>
+        <StInput
+          placeholder="YYYY-MM-DD"
+          type="text"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+        <StLabel>항목</StLabel>
+        <StInput
+          placeholder="지출 항목"
+          type="text"
+          value={item}
+          onChange={(e) => setItem(e.target.value)}
+        />
+        <StLabel>금액</StLabel>
+        <StInput
+          placeholder="지출 금액"
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+        <StLabel>내용</StLabel>
+        <StInput
+          placeholder="지출 내용"
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <StBtnBox>
+          <StButton $backColor="#1467ff" onClick={handleSubmit}>
+            수정
+          </StButton>
+          <StButton $backColor="#ff2e2e" onClick={handleDelete}>
+            삭제
+          </StButton>
+          <StButton
+            $backColor="#6e6e6e"
+            onClick={() => {
+              navigate(`/`);
+            }}
+          >
+            뒤로 가기
+          </StButton>
+        </StBtnBox>
+      </StDetailBox>
     </StDiv>
   );
 };
 
 // styled-components
 const StDiv = styled.div`
+  padding: 40px;
+`;
+const StDetailBox = styled.div`
   background-color: #fff;
   max-width: 1200px;
   min-width: 800px;
@@ -158,6 +163,7 @@ const StDiv = styled.div`
   border-radius: 30px;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 `;
 const StLabel = styled.label`
   margin-bottom: 10px;

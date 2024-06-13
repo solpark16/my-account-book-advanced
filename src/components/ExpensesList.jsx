@@ -22,7 +22,6 @@ const ExpensesList = () => {
   });
 
   // form을 통해 추가될 때마다 expensesList 변경으로 바로 화면에 나오도록 함.
-
   const selectedMonthExpenses = expenses.filter((expense) => {
     return expense.month === +selectedMonth;
   });

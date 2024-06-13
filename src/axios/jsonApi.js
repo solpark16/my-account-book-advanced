@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const jsonApi = axios.create({
-  baseURL: "http://localhost:4001",
+  baseURL: "https://valiant-fossil-cupcake.glitch.me",
 });
 
 export default jsonApi;

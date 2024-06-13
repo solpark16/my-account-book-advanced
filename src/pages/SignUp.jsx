@@ -2,15 +2,15 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import authApi from "../axios/authApi";
+import { register } from "../lib/api/auth";
 
 const SignUp = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
   const navigate = useNavigate();
-  const onClickSignInBtnHandler = () => {
-    navigate("/");
-  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,67 +31,62 @@ const SignUp = () => {
       alert("닉네임은 1~10 글자로 입력해주세요.");
       return;
     }
-
-    try {
-      const response = await axios.post(
-        "https://moneyfulpublicpolicy.co.kr/register",
-        {
-          id,
-          password,
-          nickname,
-        }
-      );
-      const data = response.data;
-      if (data.success) {
-        navigate("/");
-      } else {
-        alert("Signup failed");
-      }
-    } catch (error) {
-      console.error("Signup error:", error);
-      alert("Signup failed");
+    const response = await register({ id, password, nickname });
+    console.log(response);
+    if (response.success) {
+      alert("회원가입이 완료되었습니다.");
+      navigate("/signin");
     }
   };
 
   return (
-    <StSignUpBox>
-      <StSignUpTitle>회원가입</StSignUpTitle>
-      <StSignUpForm onSubmit={handleSubmit}>
-        <StInputBox>
-          <label>아이디</label>
-          <input
-            type="text"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            placeholder="아이디를 입력하세요."
-          />
-        </StInputBox>
-        <StInputBox>
-          <label>비밀번호</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="비밀번호를 입력하세요."
-          />
-        </StInputBox>
-        <StInputBox>
-          <label>닉네임</label>
-          <input
-            type="text"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            placeholder="닉네임을 입력하세요."
-          />
-        </StInputBox>
-        <StSignUpBtn type="submit">회원가입</StSignUpBtn>
-      </StSignUpForm>
-      <StSignInBtn onClick={() => onClickSignInBtnHandler()}>
-        로그인
-      </StSignInBtn>
-    </StSignUpBox>
+    <StDiv>
+      <StSignUpBox>
+        <StSignUpTitle>회원가입</StSignUpTitle>
+        <StSignUpForm onSubmit={handleSubmit}>
+          <StInputBox>
+            <label>아이디</label>
+            <input
+              type="text"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+              placeholder="아이디를 입력하세요."
+            />
+          </StInputBox>
+          <StInputBox>
+            <label>비밀번호</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호를 입력하세요."
+            />
+          </StInputBox>
+          <StInputBox>
+            <label>닉네임</label>
+            <input
+              type="text"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="닉네임을 입력하세요."
+            />
+          </StInputBox>
+          <StSignUpBtn type="submit">회원가입</StSignUpBtn>
+        </StSignUpForm>
+        <StSignInBtn
+          onClick={() => {
+            navigate("/signin");
+          }}
+        >
+          로그인 페이지로
+        </StSignInBtn>
+      </StSignUpBox>
+    </StDiv>
   );
 };
+const StDiv = styled.div`
+  padding: 40px;
+`;
 const StSignUpBox = styled.div`
   max-width: 400px;
   margin: 0 auto;

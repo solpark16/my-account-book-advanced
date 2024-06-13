@@ -11,22 +11,22 @@
       "userId": "41b13327bc07-5f9c-4650-941f"
     },
     {
-      "id": "b82b213e-8164-4c89-94b0-7246cdcfc4f9",
-      "month": 1,
-      "date": "2024-01-21",
-      "item": "식비",
-      "amount": 412000,
-      "description": "dfBBQdfdsasd",
-      "createdBy": "Me",
-      "userId": "41abeddwc07-5f9c-4650-941f"
-    },
-    {
       "id": "55ed477a-fc79-4c60-a61c-652913831b57",
       "month": 2,
       "date": "2024-02-01",
       "item": "3",
       "amount": 3,
       "description": "3",
+      "createdBy": "link",
+      "userId": "userId 미존재, 리팩토링 필요"
+    },
+    {
+      "id": "c53f6d86-e80c-4653-9b12-7163ab5656f4",
+      "month": 1,
+      "date": "2024-01-01",
+      "item": "4",
+      "amount": 4,
+      "description": "4",
       "createdBy": "link",
       "userId": "userId 미존재, 리팩토링 필요"
     }

@@ -10,42 +10,44 @@ const Header = () => {
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      alert("로그인이 필요합니다.");
-      navigate("/");
-    } else {
-      const fetchUserInfo = async () => {
-        try {
-          const token = localStorage.getItem("accessToken");
-          const { data } = await authApi.get("/user", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setUserInfo(data);
-        } catch (error) {
-          console.error("Failed to fetch user info:", error);
-          logout();
-        }
-      };
-      fetchUserInfo();
-    }
-  }, [isAuthenticated, navigate]);
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     // alert("로그인이 필요합니다.");
+  //     // navigate("/signin");
+  //   } else {
+  //     const fetchUserInfo = async () => {
+  //       try {
+  //         const token = localStorage.getItem("accessToken");
+  //         const { data } = await authApi.get("/user", {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         });
+  //         setUserInfo(data);
+  //       } catch (error) {
+  //         console.error("Failed to fetch user info:", error);
+  //         logout();
+  //       }
+  //     };
+  //     fetchUserInfo();
+  //   }
+  // }, [isAuthenticated, navigate]);
 
-  const handleLogout = () => {
-    const confirmLogout = window.confirm("정말로 로그아웃 하시겠습니까?");
-    if (confirmLogout) {
-      logout();
-      navigate("/");
-    }
-  };
-  if (!userInfo) {
-    return <StHeader></StHeader>;
-  }
+  // const handleLogout = () => {
+  //   const confirmLogout = window.confirm("정말로 로그아웃 하시겠습니까?");
+  //   if (confirmLogout) {
+  //     logout();
+  //     navigate("/signin");
+  //   }
+  // };
+  // if (!userInfo) {
+  //   return <StHeader></StHeader>;
+  // }
+
   return (
     <StHeader>
-      <Link to="/home">
+      안냐새여
+      {/* <Link to="/">
         <StHeaderTitle>HOME</StHeaderTitle>
       </Link>
       <Link to="/mypage">
@@ -60,11 +62,11 @@ const Header = () => {
           </>
         ) : (
           <>
-            <Link to="/">Login</Link>
+            <Link to="/signin">Login</Link>
             <Link to="/signup">Signup</Link>
           </>
         )}
-      </StNav>
+      </StNav> */}
     </StHeader>
   );
 };
