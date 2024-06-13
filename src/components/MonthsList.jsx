@@ -3,12 +3,26 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedMonth } from "../redux/slices/selectedMonthSilce";
 import { setExpensesList } from "../redux/slices/expensesListSlice";
+import jsonApi from "../axios/jsonApi";
+import { useQuery } from "@tanstack/react-query";
 
 // component
 const MonthsList = () => {
   // useSelector
   const { selectedMonth } = useSelector((state) => state.selectedMonth);
-  const { expenses } = useSelector((state) => state.expenses);
+  const getExpenses = async () => {
+    const response = await jsonApi.get("/expenses");
+    return response.data;
+  };
+
+  const {
+    data: expenses,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["expenses"],
+    queryFn: getExpenses,
+  });
   // useDispatch
   const dispatch = useDispatch();
 

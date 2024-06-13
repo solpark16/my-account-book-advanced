@@ -9,7 +9,7 @@ const Home = () => {
     <StDiv>
       <ExpenseForm />
       <MonthsList />
-      <ExpenseSummary />
+      {/* <ExpenseSummary /> */}
       <ExpensesList />
     </StDiv>
   );

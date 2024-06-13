@@ -1,48 +1,51 @@
-import React, { useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { setExpenses } from "../redux/slices/expensesSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import jsonApi from "../axios/jsonApi";
+import { getExpense, patchExpense, deleteExpense } from "../lib/api/expense";
 
 // Detail Component
 const Detail = () => {
   const queryClient = useQueryClient();
-
-  const location = useLocation();
+  const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  // const { expenses } = useSelector((state) => state.expenses);
-  // const { expense } = location.state.expense;
-  // save ref
-  const saveDateRef = useRef(expense.date);
-  const saveItemRef = useRef(expense.item);
-  const saveAmountRef = useRef(expense.amount);
-  const saveDescriptionRef = useRef(expense.description);
 
-  // 수정 함수 (개인)
-  const handleDateInputChange = (e) => {
-    saveDateRef.current = e.target.value;
-  };
-  const handleItemInputChange = (e) => {
-    saveItemRef.current = e.target.value;
-  };
-  const handleAmountInputChange = (e) => {
-    saveAmountRef.current = e.target.value;
-  };
-  const handleDescriptionInputChange = (e) => {
-    saveDescriptionRef.current = e.target.value;
-  };
+  const {
+    data: expense,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["expenses", id],
+    queryFn: getExpense,
+  });
+
+  // save ref
+  const [date, setDate] = useState("");
+  const [item, setItem] = useState("");
+  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    if (expense) {
+      setDate(expense.date);
+      setItem(expense.item);
+      setAmount(expense.amount);
+      setDescription(expense.description);
+    }
+  }, [expense]);
+
+  // 수정 mutation
+  const updateMutation = useMutation({
+    mutationFn: patchExpense,
+    onSuccess: () => {
+      navigate("/home");
+    },
+  });
 
   // 수정 함수 (전체)
   const handleSubmit = (e) => {
     e.preventDefault();
-    const date = saveDateRef.current;
-    const item = saveItemRef.current;
-    const amount = saveAmountRef.current;
-    const description = saveDescriptionRef.current;
-
     // 유효성 검사
     const format =
       /^(19[7-9][0-9]|20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
@@ -59,85 +62,76 @@ const Detail = () => {
       return;
     }
     // update할 객체
-    const updateExpense = {
-      id: expense.id,
+    const updatedExpense = {
+      id,
       date,
       item,
       amount: +amount,
+      month: expense.month,
       description,
+      createdBy: expense.createdBy,
     };
-    // dispatch 사용해 전역관리 state 업데이트
-    dispatch(
-      setExpenses(
-        expenses.map((expense) => {
-          if (updateExpense.id !== expense.id) {
-            return expense;
-          } else if (updateExpense.id === expense.id) {
-            return updateExpense;
-          }
-        })
-      )
-    );
-    navigate(`/`);
-  };
 
-  // 삭제 함수
-  const handleDelete = () => {
-    confirm("정말로 삭제하시겠습니까?");
-    const deleteExpenseId = expense.id;
-    jsonApi.delete(`/expenses/${deleteExpenseId}`);
+    updateMutation.mutate(updatedExpense);
   };
 
   // 삭제 mutation
   const deleteMutation = useMutation({
-    mutationFn: handleDelete,
+    mutationFn: deleteExpense,
     onSuccess: () => {
-      navigate(`/home`);
-      queryClient.invalidateQueries(["expenses"]);
+      navigate("/home");
     },
   });
 
+  // 삭제 함수
+  const handleDelete = () => {
+    if (confirm("정말로 삭제하시겠습니까?")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
+  if (isPending) {
+    return <div>로딩중입니다...</div>;
+  }
+
+  if (isError) {
+    return <div>데이터 조회 중 오류가 발생했습니다.</div>;
+  }
   return (
     <StDiv>
       <StLabel>날짜</StLabel>
       <StInput
         placeholder="YYYY-MM-DD"
         type="text"
-        defaultValue={expense.date}
-        onChange={handleDateInputChange}
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
       />
       <StLabel>항목</StLabel>
       <StInput
         placeholder="지출 항목"
         type="text"
-        defaultValue={expense.item}
-        onChange={handleItemInputChange}
+        value={item}
+        onChange={(e) => setItem(e.target.value)}
       />
       <StLabel>금액</StLabel>
       <StInput
         placeholder="지출 금액"
         type="number"
-        defaultValue={expense.amount}
-        onChange={handleAmountInputChange}
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
       />
       <StLabel>내용</StLabel>
       <StInput
         placeholder="지출 내용"
         type="text"
-        defaultValue={expense.description}
-        onChange={handleDescriptionInputChange}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
       />
       <StBtnBox>
         <StButton $backColor="#1467ff" onClick={handleSubmit}>
           수정
         </StButton>
-        <StButton
-          $backColor="#ff2e2e"
-          onClick={(e) => {
-            e.preventDefault();
-            deleteMutation.mutate();
-          }}
-        >
+        <StButton $backColor="#ff2e2e" onClick={handleDelete}>
           삭제
         </StButton>
         <StButton

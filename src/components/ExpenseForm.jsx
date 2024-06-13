@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import jsonApi from "../axios/jsonApi";
 import { AuthContext } from "../context/AuthContext";
 import authApi from "../axios/authApi";
+import { postExpense } from "../lib/api/expense";
 
 // component
 const ExpenseForm = () => {
@@ -31,7 +32,6 @@ const ExpenseForm = () => {
     };
     fetchUserInfo();
   }, [isAuthenticated]);
-
   // useSelector
   const { selectedMonth } = useSelector((state) => state.selectedMonth);
 
@@ -47,7 +47,8 @@ const ExpenseForm = () => {
   const [description, setDescription] = useState("");
 
   // 지출 항목 추가 이벤트 함수
-  const addExpenseHandler = async (newExpense) => {
+  const addExpenseHandler = (e) => {
+    e.preventDefault();
     // 유효성 검사
     const format =
       /^(19[7-9][0-9]|20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
@@ -64,8 +65,19 @@ const ExpenseForm = () => {
       return;
     }
 
+    const newExpense = {
+      id: uuidv4(),
+      month: +selectedMonth,
+      date,
+      item,
+      amount: +amount,
+      description,
+      createdBy: userInfo.id,
+      userId: "userId 미존재, 리팩토링 필요",
+    };
+
     // 기존 지출 항목들에 새로운 지출 항목 추가
-    await jsonApi.post("/expenses", newExpense);
+    mutation.mutate(newExpense);
 
     // 각 인풋 초기화
     setDate(() => {
@@ -79,10 +91,11 @@ const ExpenseForm = () => {
   };
 
   const mutation = useMutation({
-    mutationFn: addExpenseHandler,
+    mutationFn: postExpense,
     onSuccess: () => {
       alert("데이터 삽입 완료");
       queryClient.invalidateQueries(["expenses"]);
+      Navigate(0);
     },
   });
 
@@ -96,19 +109,7 @@ const ExpenseForm = () => {
   }, [selectedMonth]);
 
   return (
-    <StForm
-      onSubmit={(e) => {
-        e.preventDefault();
-        mutation.mutate({
-          id: uuidv4(),
-          date,
-          item,
-          amount: +amount,
-          description,
-          createdBy: userInfo.nickname,
-        });
-      }}
-    >
+    <StForm onSubmit={addExpenseHandler}>
       <StInputBox>
         <label>날짜</label>
         <StInput

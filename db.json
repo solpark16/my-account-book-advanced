@@ -1,13 +1,14 @@
 {
   "expenses": [
     {
-      "id": "9aba6d72-5ee7-4f02-a4d4-e8bbff9ded4b",
+      "id": "a5c0d8de-d010-4d07-9934-29765051a7ea",
       "month": 1,
-      "date": "2024-01-17",
-      "item": "식비",
-      "amount": 21000,
-      "description": "대광참치",
-      "createdBy": "Rosie"
+      "date": "2024-01-07",
+      "item": "개인사업",
+      "amount": 1000,
+      "description": "X(구 트위터)",
+      "createdBy": "Musk",
+      "userId": "41b13327bc07-5f9c-4650-941f"
     },
     {
       "id": "b82b213e-8164-4c89-94b0-7246cdcfc4f9",
@@ -15,8 +16,19 @@
       "date": "2024-01-21",
       "item": "식비",
       "amount": 412000,
-      "description": "BBQ",
-      "createdBy": "Me"
+      "description": "dfBBQdfdsasd",
+      "createdBy": "Me",
+      "userId": "41abeddwc07-5f9c-4650-941f"
+    },
+    {
+      "id": "55ed477a-fc79-4c60-a61c-652913831b57",
+      "month": 2,
+      "date": "2024-02-01",
+      "item": "3",
+      "amount": 3,
+      "description": "3",
+      "createdBy": "link",
+      "userId": "userId 미존재, 리팩토링 필요"
     }
   ]
 }
