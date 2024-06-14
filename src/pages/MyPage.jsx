@@ -13,6 +13,8 @@ const MyPage = () => {
   useEffect(() => {
     if (user) {
       setNewNickname(user.nickname);
+      // setNewAvatar(user.avatar);
+    } else {
     }
   }, [user]);
 
@@ -43,6 +45,7 @@ const MyPage = () => {
     <StDiv>
       <StProfileBox>
         <StProfileTitle>프로필 수정</StProfileTitle>
+        {user && <StProfileImg src={user.avatar} />}
         <StProfileForm onSubmit={handleProfileChange}>
           <label>닉네임</label>
           <StNicknameInput
