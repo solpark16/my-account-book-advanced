@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
 import Router from "./shared/Router";
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import { AuthProvider } from "./context/AuthContext";
-import { getUserInfo } from "./lib/api/auth";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}

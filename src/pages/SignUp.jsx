@@ -1,9 +1,7 @@
-import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import authApi from "../axios/authApi";
-import { register } from "../lib/api/auth";
+import { getUserInfo, register } from "../lib/api/auth";
 
 const SignUp = () => {
   const [id, setId] = useState("");
@@ -11,7 +9,16 @@ const SignUp = () => {
   const [nickname, setNickname] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  // 유저 정보가 있을 경우 (로그인 되어 있을 경우) home 화면으로 이동
+  useEffect(() => {
+    getUserInfo().then((res) => {
+      if (res) {
+        navigate("/");
+      }
+    });
+  }, []);
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
     // 유효성 검사
@@ -32,7 +39,6 @@ const SignUp = () => {
       return;
     }
     const response = await register({ id, password, nickname });
-    console.log(response);
     if (response.success) {
       alert("회원가입이 완료되었습니다.");
       navigate("/signin");
@@ -43,7 +49,7 @@ const SignUp = () => {
     <StDiv>
       <StSignUpBox>
         <StSignUpTitle>회원가입</StSignUpTitle>
-        <StSignUpForm onSubmit={handleSubmit}>
+        <StSignUpForm onSubmit={handleSignUp}>
           <StInputBox>
             <label>아이디</label>
             <input

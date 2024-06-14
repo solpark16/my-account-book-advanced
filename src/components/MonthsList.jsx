@@ -2,27 +2,12 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedMonth } from "../redux/slices/selectedMonthSilce";
-import { setExpensesList } from "../redux/slices/expensesListSlice";
-import jsonApi from "../axios/jsonApi";
-import { useQuery } from "@tanstack/react-query";
 
 // component
 const MonthsList = () => {
   // useSelector
   const { selectedMonth } = useSelector((state) => state.selectedMonth);
-  const getExpenses = async () => {
-    const response = await jsonApi.get("/expenses");
-    return response.data;
-  };
 
-  const {
-    data: expenses,
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["expenses"],
-    queryFn: getExpenses,
-  });
   // useDispatch
   const dispatch = useDispatch();
 
@@ -33,10 +18,6 @@ const MonthsList = () => {
   const changeMonthHandler = (number) => {
     window.localStorage.setItem("selectedMonth", number);
     dispatch(setSelectedMonth(number));
-    const selectedMonthExpensesList = expenses.filter((expense) => {
-      return +expense.date.slice(5, 7) === number;
-    });
-    dispatch(setExpensesList(selectedMonthExpensesList));
   };
 
   // selectedMonth가 null일 경우 1로 설정

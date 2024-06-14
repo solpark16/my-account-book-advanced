@@ -53,6 +53,8 @@ export const updateProfile = async (formData) => {
         },
       });
       return data;
-    } catch (error) {}
+    } catch (error) {
+      alert("프로필 수정을 실패했습니다.");
+    }
   }
 };

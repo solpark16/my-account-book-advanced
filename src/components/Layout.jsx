@@ -23,11 +23,9 @@ export default function Layout() {
   }, []);
 
   const handleLogout = () => {
-    if (confirm("정말 로그아웃하시겠습니까?")) {
-      setUser(null);
-      navigate("/signin");
-      localStorage.clear();
-    }
+    setUser(null);
+    navigate("/signin");
+    localStorage.clear();
   };
 
   return (
@@ -43,7 +41,15 @@ export default function Layout() {
           <StNav>
             <StProfileImg src={user.avatar} />
             <p>{user.nickname}님, 안녕하세요!</p>
-            <StLogOutBtn onClick={handleLogout}>로그아웃</StLogOutBtn>
+            <StLogOutBtn
+              onClick={() => {
+                if (confirm("정말 로그아웃하시겠습니까?")) {
+                  handleLogout();
+                }
+              }}
+            >
+              로그아웃
+            </StLogOutBtn>
           </StNav>
         )}
       </StHeader>
@@ -91,4 +97,5 @@ const StProfileImg = styled.img`
   height: 50px;
   object-fit: cover;
   border-radius: 50%;
+  background-color: #cac4c4;
 `;

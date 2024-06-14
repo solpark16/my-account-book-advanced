@@ -1,25 +1,38 @@
 import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import { getExpenses } from "../lib/api/expense";
+import { useQuery } from "@tanstack/react-query";
 
 // component
 const ExpenseSummary = () => {
   // useSelector
-  const { expensesList } = useSelector((state) => state.expensesList);
   const { selectedMonth } = useSelector((state) => state.selectedMonth);
+  const {
+    data: expenses = [],
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["expenses"],
+    queryFn: getExpenses,
+  });
+
+  const selectedMonthExpenses = expenses.filter((expense) => {
+    return expense.month === +selectedMonth;
+  });
 
   // 각 항목별 컬러 배열
   const graphColor = ["#007BFF", "#28A745", "#DC3545", "#FFC107", "#17A2B8"];
 
   // 월별 총 지출 계산
-  const expensesSummary = expensesList.reduce((acc, cur) => {
+  const expensesSummary = selectedMonthExpenses.reduce((acc, cur) => {
     return acc + Number(cur.amount);
   }, 0);
 
   // 항목별 지출 금액 계산
   const expensesItemList = () => {
     const expensesItemList = {};
-    expensesList.forEach((expense) => {
+    selectedMonthExpenses.forEach((expense) => {
       if (Object.keys(expensesItemList).includes(expense.item)) {
         expensesItemList[expense.item] += +expense.amount;
       } else {

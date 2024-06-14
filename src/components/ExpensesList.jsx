@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
 import ExpenseItem from "./ExpenseItem";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { getExpenses } from "../lib/api/expense";
 
@@ -9,8 +8,6 @@ import { getExpenses } from "../lib/api/expense";
 const ExpensesList = () => {
   // useSelector
   const { selectedMonth } = useSelector((state) => state.selectedMonth);
-  // useDispatch
-  const dispatch = useDispatch();
 
   const {
     data: expenses = [],
@@ -20,7 +17,6 @@ const ExpensesList = () => {
     queryKey: ["expenses"],
     queryFn: getExpenses,
   });
-
   // form을 통해 추가될 때마다 expensesList 변경으로 바로 화면에 나오도록 함.
   const selectedMonthExpenses = expenses.filter((expense) => {
     return expense.month === +selectedMonth;

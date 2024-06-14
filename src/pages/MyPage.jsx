@@ -2,20 +2,17 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../context/AuthContext";
-import axios from "axios";
-import authApi from "../axios/authApi";
 import { updateProfile } from "../lib/api/auth";
 
 const MyPage = () => {
   const { user, setUser } = useContext(AuthContext);
-  const [newNickname, setNewNickname] = useState(user ? user.nickname : "");
-  const [newImage, setNewImage] = useState(null);
+  const [newNickname, setNewNickname] = useState("");
+  const [newAvatar, setNewAvatar] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
       setNewNickname(user.nickname);
-      // setNewImage(user.avatar);
     }
   }, [user]);
 
@@ -27,31 +24,25 @@ const MyPage = () => {
     }
 
     const formData = new FormData();
-    if (newNickname) {
-      formData.append("avatar", newImage);
-    }
+    formData.append("avatar", newAvatar);
     formData.append("nickname", newNickname);
 
     const response = await updateProfile(formData);
 
     if (response.success) {
-      setUser({
-        ...user,
-        nickname: response.nickname,
-        avatar: response.avatar,
-      });
+      setUser(
+        response.avatar
+          ? { ...user, nickname: response.nickname, avatar: response.avatar }
+          : { ...user, nickname: response.nickname }
+      );
       navigate("/");
     }
   };
 
-  // if (!userInfo) {
-  //   return <div>Loading...</div>;
-  // }
   return (
     <StDiv>
       <StProfileBox>
         <StProfileTitle>프로필 수정</StProfileTitle>
-        {/* <StProfileImg src={userInfo.avatar} /> */}
         <StProfileForm onSubmit={handleProfileChange}>
           <label>닉네임</label>
           <StNicknameInput
@@ -62,11 +53,10 @@ const MyPage = () => {
             }}
           />
           <label>아바타 이미지</label>
-
           <input
             type="file"
             onChange={(e) => {
-              setNewImage(e.target.files[0]);
+              setNewAvatar(e.target.files[0]);
             }}
           />
           <StProfileBtn type="submit">프로필 수정하기</StProfileBtn>

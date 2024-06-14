@@ -1,15 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import jsonApi from "../axios/jsonApi";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getExpense, patchExpense, deleteExpense } from "../lib/api/expense";
+import { AuthContext } from "../context/AuthContext";
 
 // Detail Component
 const Detail = () => {
-  const queryClient = useQueryClient();
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   const {
     data: expense,
@@ -20,7 +20,7 @@ const Detail = () => {
     queryFn: getExpense,
   });
 
-  // save ref
+  // useStates
   const [date, setDate] = useState("");
   const [item, setItem] = useState("");
   const [amount, setAmount] = useState("");
@@ -64,17 +64,17 @@ const Detail = () => {
     // update할 객체
     const updatedExpense = {
       id,
+      month: expense.month,
       date,
       item,
       amount: +amount,
-      month: expense.month,
       description,
       createdBy: expense.createdBy,
+      userId: expense.userId,
     };
 
     updateMutation.mutate(updatedExpense);
   };
-
   // 삭제 mutation
   const deleteMutation = useMutation({
     mutationFn: deleteExpense,
@@ -129,12 +129,17 @@ const Detail = () => {
           onChange={(e) => setDescription(e.target.value)}
         />
         <StBtnBox>
-          <StButton $backColor="#1467ff" onClick={handleSubmit}>
-            수정
-          </StButton>
-          <StButton $backColor="#ff2e2e" onClick={handleDelete}>
-            삭제
-          </StButton>
+          {expense.userId === user.userId && (
+            <>
+              <StButton $backColor="#1467ff" onClick={handleSubmit}>
+                수정
+              </StButton>
+              <StButton $backColor="#ff2e2e" onClick={handleDelete}>
+                삭제
+              </StButton>
+            </>
+          )}
+
           <StButton
             $backColor="#6e6e6e"
             onClick={() => {

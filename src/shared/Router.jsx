@@ -5,7 +5,6 @@ import Detail from "../pages/Detail";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import { AuthContext } from "../context/AuthContext";
-import Header from "../components/Header";
 import MyPage from "../pages/MyPage";
 import Layout from "../components/Layout";
 
@@ -24,11 +23,8 @@ import Layout from "../components/Layout";
 // };
 
 const Router = () => {
-  const { isAuthenticated } = useContext(AuthContext);
-
   return (
     <BrowserRouter>
-      {/* {isAuthenticated && <Header />} */}
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />

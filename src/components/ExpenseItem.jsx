@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -7,16 +6,14 @@ const ExpenseItem = ({ expense }) => {
   // useNavigate
   const navigate = useNavigate();
   const { id, date, item, description, amount, createdBy } = expense;
+
   // expense를 넘기면서 해당 id를 가진 detail 페이지로 이동하는 함수
-  const onClickLiHandler = (expense) => {
-    navigate(`/detail/${id}`, {
-      state: {
-        expense: { expense },
-      },
-    });
+  const onClickLiHandler = () => {
+    navigate(`/detail/${id}`);
   };
+
   return (
-    <StLi onClick={() => onClickLiHandler(expense)}>
+    <StLi onClick={() => onClickLiHandler()}>
       <StItemLeft>
         <p>{date}</p>
         <StDescription>

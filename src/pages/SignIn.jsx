@@ -1,15 +1,23 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../context/AuthContext";
-import authApi from "../axios/authApi";
-import { login } from "../lib/api/auth";
+import { getUserInfo, login } from "../lib/api/auth";
 
 const SignIn = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const { user, setUser } = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // 유저 정보가 있을 경우 (로그인 되어 있을 경우) home 화면으로 이동
+  useEffect(() => {
+    getUserInfo().then((res) => {
+      if (res) {
+        navigate("/");
+      }
+    });
+  }, []);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -22,7 +30,6 @@ const SignIn = () => {
     setUser({ userId, nickname, avatar });
     alert("로그인 되었습니다.");
     navigate("/");
-    console.log("와이라냐고");
   };
   return (
     <StDiv>

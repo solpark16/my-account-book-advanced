@@ -3,9 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import jsonApi from "../axios/jsonApi";
 import { AuthContext } from "../context/AuthContext";
-import authApi from "../axios/authApi";
 import { postExpense } from "../lib/api/expense";
 
 // component
@@ -53,7 +51,7 @@ const ExpenseForm = () => {
       amount: +amount,
       description,
       createdBy: user.userId,
-      userId: "userId 미존재, 리팩토링 필요",
+      userId: user.userId,
     };
 
     // 기존 지출 항목들에 새로운 지출 항목 추가
