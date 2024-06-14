@@ -87,8 +87,11 @@ const ExpenseForm = () => {
   }, [selectedMonth]);
 
   return (
-    <StForm onSubmit={addExpenseHandler}>
-      <StInputBox>
+    <StForm
+      className="flex bg-white gap-5 justify-center flex-wrap p-30px"
+      onSubmit={addExpenseHandler}
+    >
+      <StInputBox className="flex">
         <label>날짜</label>
         <StInput
           placeholder="YYYY-MM-DD"
@@ -138,16 +141,16 @@ const ExpenseForm = () => {
 
 // styled-components
 const StForm = styled.form`
-  background-color: #fff;
+  /* background-color: #fff; */
   border-radius: 30px;
-  padding: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  /* padding: 30px; */
+  /* display: flex; */
+  /* flex-wrap: wrap; */
+  /* gap: 20px; */
+  /* justify-content: center; */
 `;
 const StInputBox = styled.div`
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   flex: 1;
 `;
