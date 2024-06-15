@@ -87,23 +87,25 @@ const ExpenseForm = () => {
   }, [selectedMonth]);
 
   return (
-    <StForm
-      className="flex bg-white gap-5 justify-center flex-wrap p-30px"
+    <form
+      className="flex bg-white gap-5 justify-center flex-wrap p-30px rounded-[30px]"
       onSubmit={addExpenseHandler}
     >
-      <StInputBox className="flex">
+      <div className="flex flex-col flex-1">
         <label>날짜</label>
-        <StInput
+        <input
+          className="mt-[10px] rounded-[10px] p-[10px] w-full h-[30px] box-border text-base border border-solid border-input-border-gray"
           placeholder="YYYY-MM-DD"
           value={date}
           onChange={(e) => {
             setDate(e.target.value);
           }}
         />
-      </StInputBox>
-      <StInputBox>
+      </div>
+      <div className="flex flex-col flex-1">
         <label>항목</label>
-        <StInput
+        <input
+          className="mt-[10px] rounded-[10px] p-[10px] w-full h-[30px] box-border text-base border border-solid border-input-border-gray"
           placeholder="지출 항목"
           type="text"
           value={item}
@@ -111,10 +113,11 @@ const ExpenseForm = () => {
             setItem(e.target.value);
           }}
         />
-      </StInputBox>
-      <StInputBox>
+      </div>
+      <div className="flex flex-col flex-1">
         <label>금액</label>
-        <StInput
+        <input
+          className="mt-[10px] rounded-[10px] p-[10px] w-full h-[30px] box-border text-base border border-solid border-input-border-gray"
           placeholder="지출 금액"
           type="number"
           value={amount}
@@ -122,10 +125,11 @@ const ExpenseForm = () => {
             setAmount(e.target.value);
           }}
         />
-      </StInputBox>
-      <StInputBox>
+      </div>
+      <div className="flex flex-col flex-1">
         <label>내용</label>
-        <StInput
+        <input
+          className="mt-[10px] rounded-[10px] p-[10px] w-full h-[30px] box-border text-base border border-solid border-input-border-gray"
           placeholder="지출 내용"
           type="text"
           value={description}
@@ -133,36 +137,23 @@ const ExpenseForm = () => {
             setDescription(e.target.value);
           }}
         />
-      </StInputBox>
+      </div>
       <StButton type="submit">저장</StButton>
-    </StForm>
+    </form>
   );
 };
 
 // styled-components
-const StForm = styled.form`
-  /* background-color: #fff; */
-  border-radius: 30px;
-  /* padding: 30px; */
-  /* display: flex; */
-  /* flex-wrap: wrap; */
-  /* gap: 20px; */
-  /* justify-content: center; */
-`;
-const StInputBox = styled.div`
-  /* display: flex; */
-  flex-direction: column;
-  flex: 1;
-`;
+
 const StInput = styled.input`
-  margin-top: 10px;
-  border-radius: 10px;
-  box-sizing: border-box;
-  border: 1px solid #c4c4c4;
-  height: 30px;
-  padding: 10px;
-  font-size: 16px;
-  width: 100%;
+  /* margin-top: 10px; */
+  /* border-radius: 10px; */
+  /* box-sizing: border-box; */
+  /* border: 1px solid #c4c4c4; */
+  /* height: 30px; */
+  /* padding: 10px; */
+  /* font-size: 16px; */
+  /* width: 100%; */
 `;
 const StButton = styled.button`
   padding: 10px 20px;

@@ -13,7 +13,6 @@ const MyPage = () => {
   useEffect(() => {
     if (user) {
       setNewNickname(user.nickname);
-      // setNewAvatar(user.avatar);
     } else {
     }
   }, [user]);
