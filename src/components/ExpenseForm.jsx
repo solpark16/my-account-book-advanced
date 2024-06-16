@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
-import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "../context/AuthContext";
@@ -138,30 +137,14 @@ const ExpenseForm = () => {
           }}
         />
       </div>
-      <StButton type="submit">저장</StButton>
+      <button
+        className="cursor-pointer px-5 py-10px border-none rounded-[5px] bg-[#49914b] text-white"
+        type="submit"
+      >
+        저장
+      </button>
     </form>
   );
 };
-
-// styled-components
-
-const StInput = styled.input`
-  /* margin-top: 10px; */
-  /* border-radius: 10px; */
-  /* box-sizing: border-box; */
-  /* border: 1px solid #c4c4c4; */
-  /* height: 30px; */
-  /* padding: 10px; */
-  /* font-size: 16px; */
-  /* width: 100%; */
-`;
-const StButton = styled.button`
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #49914b;
-  color: #fff;
-  cursor: pointer;
-`;
 
 export default ExpenseForm;
